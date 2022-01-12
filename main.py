@@ -1,21 +1,30 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import os
+from time import sleep  
 
-from time import sleep 
 
 import find_results
 
 username = ""
 
-options = webdriver.ChromeOptions()
-# options.add_argument('--headless')
-# options.add_argument('--no-sandbox')
-# options.add_argument('--disable-dev-sh-usage')
-# options.add_argument('--proxy-server=%s' % proxy)
+options = webdriver.ChromeOptions() 
 
-driver = webdriver.Chrome(options=options) 
-
+if os.name == 'nt':
+	driver = webdriver.Chrome(executable_path=(os.path.abspath(os.getcwd()) + "chromedriver.exe"), options=options)
+	
+else:
+	try:
+		driver = webdriver.Chrome(options=options) 
+	except Exception as e:
+		try:
+			import chromedriver_binary  # Adds chromedriver binary to path
+			driver = webdriver.Chrome(options=options) 
+		except Exception as e:
+			print(e)
+			exit(1)
+			
 driver.get('https://www.instagram.com')
 driver.implicitly_wait(5)  
 
